@@ -1,5 +1,5 @@
 import PySimpleGUI as sg
-result_panel = sg.InputText(key='input')
+result_panel = sg.InputText(size=(20,1), key='input')
 button_0 = sg.Button("0")
 button_1 = sg.Button("1")
 button_2 = sg.Button("2")
@@ -18,9 +18,8 @@ button_minus = sg.Button("-")
 button_dot = sg.Button(".")
 button_clear = sg.Button("C")
 
-current_value = "0"
-total = 0
-operator = ""
+current_value = ""
+calculation = ["", "", ""]
 
 layout = [
     [result_panel, button_clear],
@@ -35,20 +34,46 @@ layout = [
 window = sg.Window('Calculator', layout)
 
 
-
 while True:
     event, values = window.read()
     if event in (sg.WIN_CLOSED, 'Cancel'):
         break
     
-    # next step handle digit inputs
-            
-            
+
     
+    # handle digit inputs
+    if str.isdigit(event):
+        current_value += event
+        
+        
+    # handle dot input
+    if event == '.' and event not in current_value:
+        current_value += '.'
+    
+    # handle C input
+    if event == "C":
+        current_value = ""
+        calculation = ["", "", ""]
+    
+    # handle operator input
+    if event in "/+-*":
+        calculation[0] = current_value
+        calculation[1] = event
+        current_value = ""
+        window["input"].update(current_value)
+    
+    # handle = input
+    if event == "=":
+        calculation[2] = current_value
+        c = ""
+        for i in range(len(calculation)):
+            c += calculation[i]
+        current_value = str(eval(c))    
+        calculation = [current_value, "", ""]
     
     # update display
     window["input"].update(current_value)
     
-    print(f"EVENT: {event}\nVALUES: {values}")
+    #print(f"EVENT: {event}\nVALUES: {values}")
 
 window.close()
