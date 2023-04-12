@@ -62,15 +62,19 @@ while True:
         current_value = ""
         window["input"].update(current_value)
     
-    # handle = input
-    if event == "=":
-        calculation[2] = current_value
-        c = ""
-        for i in range(len(calculation)):
-            c += calculation[i]
-        current_value = str(eval(c))    
-        calculation = [current_value, "", ""]
-    
+    try:
+        # handle = input
+        if event == "=":
+            calculation[2] = current_value
+            c = ""
+            for i in range(len(calculation)):
+                c += calculation[i]
+            current_value = str(eval(c))    
+            calculation = [current_value, "", ""]
+    except ZeroDivisionError:
+        sg.popup("You can not divide by zero", title="Error")
+        
+        
     # update display
     window["input"].update(current_value)
     
